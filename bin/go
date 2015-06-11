@@ -3,14 +3,11 @@
 b=`tput bold`
 nb=`tput sgr0`
 SCRIPT_DIR=$(dirname $0)
-
+GRADLEW=${SCRIPT_DIR}/gradlew
 function echob {
     echo "${b}${1}${nb}"
 }
 
-function ensure_requirements {
-    command -v gradlew >/dev/null 2>&1 || { echob "ERROR: gradlew not in PATH. Aborting."; exit 1; }
-}
 
 function release {
     ${SCRIPT_DIR}/release-snapshot.sh
@@ -31,14 +28,12 @@ task can be:
 }
 
 
-ensure_requirements
-
 if [ "$1" == "help" ]; then
     help
 elif [ "$1" == "release" ]; then
     release
 else
-    gradlew $*
+    $GRADLEW $*
 fi
 
 
