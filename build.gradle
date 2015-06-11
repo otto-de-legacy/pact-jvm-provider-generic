@@ -2,6 +2,11 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'signing'
+apply plugin: 'maven'
+
+group = 'de.otto.edison'
+version = '0.1.0-SNAPSHOT'
+
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
@@ -31,3 +36,37 @@ idea {
     }
 }
 
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.project {
+                packaging 'jar'
+                description 'lightweight wrapper around pact-jvm-provider for easier use in java projects'
+                url 'http://github.com/otto-de/pact-jvm-provider-generic'
+
+                scm {
+                    url 'scm:git@github.com:otto-de/pact-jvm-provider-generic.git'
+                    connection 'scm:git@github.com:otto-de/pact-jvm-provider-generic.git'
+                    developerConnection 'scm:git@github.com:otto-de/pact-jvm-provider-generic.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+            }
+        }
+    }
+}
