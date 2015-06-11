@@ -5,11 +5,20 @@ apply plugin: 'signing'
 apply plugin: 'maven'
 
 group = 'de.otto.pact-jvm'
-version = '0.1.0-SNAPSHOT'
+version = '0.1.0'
 
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
+}
+
+
+test {
+    description "Tell gradle to use TestNG with all groups"
+    useTestNG()
+    options {
+        useDefaultListeners = true
+    }
 }
 
 repositories {
@@ -36,6 +45,27 @@ idea {
     }
 }
 
+signing {
+    sign configurations.archives
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+
 uploadArchives {
     repositories {
         mavenDeployer {
@@ -50,6 +80,7 @@ uploadArchives {
 
             pom.project {
                 packaging 'jar'
+                name 'pact-jvm-provider-generic'
                 description 'lightweight wrapper around pact-jvm-provider for easier use in java projects'
                 url 'http://github.com/otto-de/pact-jvm-provider-generic'
 
@@ -66,7 +97,16 @@ uploadArchives {
                         distribution 'repo'
                     }
                 }
+
+                 developers {
+                    developer {
+                        id 'pact-jvm-provider-generic-developers'
+                        name 'Developers Developers Developers'
+                    }
+                }
+
             }
         }
     }
+
 }
