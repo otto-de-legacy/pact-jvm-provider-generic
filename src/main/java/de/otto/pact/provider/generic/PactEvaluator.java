@@ -5,7 +5,9 @@ import au.com.dius.pact.model.Pact;
 import au.com.dius.pact.model.Response;
 import au.com.dius.pact.model.ResponseMatching$;
 import au.com.dius.pact.model.ResponsePartMismatch;
+import au.com.dius.pact.provider.PactConfiguration;
 import com.google.common.collect.ImmutableList;
+import com.ning.http.client.AsyncHttpClient;
 import scala.collection.Seq;
 
 import java.util.stream.Stream;
@@ -20,6 +22,9 @@ public class PactEvaluator {
     private final StateProvider stateProvider;
     private final ProviderClient providerClient;
 
+    public static PactEvaluator pactEvaluator(StateProvider stateProvider, PactConfiguration config) {
+        return new PactEvaluator(stateProvider, new ProviderClient(config, new AsyncHttpClient()));
+    }
 
     public PactEvaluator(StateProvider stateProvider, ProviderClient providerClient) {
         this.stateProvider = stateProvider;
