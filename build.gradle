@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'signing'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
+
+repositories {
+    mavenCentral()
+    maven { url "http://nexus.lhotse.ov.otto.de:8080/content/groups/public" }
+    maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }    
+}
+
+dependencies {
+    compile ("au.com.dius:pact-jvm-provider_2.11:2.2.0")
+}
+
+idea {
+    project {
+        languageLevel = '1.8'
+    }
+}
+
