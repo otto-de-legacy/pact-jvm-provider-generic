@@ -17,7 +17,7 @@ public interface StateProvider {
             }
 
             if (annotatedMethods.isEmpty()) {
-                throw new RuntimeException("Define the state dude!");
+                throw new RuntimeException("Define the state, dude: " + stateName);
             }
 
             annotatedMethods.get(0).invoke(this);
