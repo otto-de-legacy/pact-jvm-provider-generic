@@ -7,6 +7,8 @@ import com.google.common.collect.ImmutableMap;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.FluentCaseInsensitiveStringsMap;
 import com.ning.http.client.Param;
+import scala.collection.JavaConverters;
+import scala.collection.convert.Decorators;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -33,9 +35,18 @@ public class ProviderClient {
             final String url = config.providerRoot().url() + request.path();
 
             try {
-                com.ning.http.client.Response response = httpClient
+                AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = httpClient
                         .prepareGet(url)
-                        .addQueryParams(parseParams(request))
+                        .addQueryParams(parseParams(request));
+
+                if (request.headers().nonEmpty()) {
+                    ImmutableMap<String, String> headerMap = ScalaInterop.fromMap(request.headers().get());
+                    headerMap.entrySet()
+                            .stream()
+                            .forEach(entry -> boundRequestBuilder.addHeader(entry.getKey(), entry.getValue()));
+                }
+
+                com.ning.http.client.Response response = (com.ning.http.client.Response) boundRequestBuilder
                         .execute()
                         .get();
                 return Response.apply(
