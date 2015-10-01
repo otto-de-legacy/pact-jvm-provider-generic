@@ -5,7 +5,7 @@ apply plugin: 'signing'
 apply plugin: 'maven'
 
 group = 'de.otto.pact-jvm'
-version = '0.4.0'
+version = '0.5.0-SNAPSHOT'
 
 
 task wrapper(type: Wrapper) {
